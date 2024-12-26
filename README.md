@@ -3,7 +3,7 @@
 [MY DISCORD](https://discord.gg/a2whmHmv)
 
 ## Setting for monitors with resolutions greater than 1920 x 1080
-1. Go to the address: `CS2-CSGO-HUDS-Observer-fyflo-main\overlay` and adjust the resolution to yours in the `package.json` file ("width": `specify the width`, "height": `specify the height`).
+1. Go to the address: `DOTA2-HUDS-Observer-fyflo-main\overlay` and adjust the resolution to yours in the `package.json` file ("width": `specify the width`, "height": `specify the height`).
 2. If the HUD is on the wrong monitor, select it in the taskbar, and press `Win+Shift+Arrow keys` to move it to the correct monitor.
 
 3. # Examples
@@ -15,7 +15,7 @@
 
 ## How does it work?
 
-Basically, CS:GO/CS2 is streaming data to local app-server, that transforms data and then load it to local webpage.
+Basically, DOTA2 is streaming data to local app-server, that transforms data and then load it to local webpage.
 
 ## To-do before running
 
@@ -35,7 +35,7 @@ Basically, CS:GO/CS2 is streaming data to local app-server, that transforms data
 ##
 - Start DOTA2_HUD_fyflo.exe
 ##
-- Run Overlay Exe from here: [OVERLAY DOWNLOAD](https://drive.google.com/file/d/1_NoHJRfSVFF8yTp8hXabf9Du76mowhPD/view?usp=drive_link) (OVERLAY Place in folder CS-CS2-CSGO-HUDS-Observer-fyflo) or just go to your browser [http://Your IP:2626](http://Your IP:2626)
+- Run Overlay Exe from here: [OVERLAY DOWNLOAD](https://drive.google.com/file/d/1rqCMiZAmfJkEwtPSEFhkoDCm2SI1dRJA/view?usp=sharing) (OVERLAY Place in folder CS-CS2-CSGO-HUDS-Observer-fyflo) or just go to your browser [http://Your IP:2626](http://Your IP:2626)
 - Ensure that in the Overlay exe folder, there is a config.json file with the following:
 
   ## How to make it work with OBS?
