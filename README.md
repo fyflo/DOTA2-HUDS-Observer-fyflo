@@ -90,3 +90,6 @@ function updatePage(data) {
 }
 ```
 `data` argument is being passed to it, and from that we can take actions, such as getting informations about players, map, round phases, etc. Below you will find detailed information about received information :>
+
+
+[The project is based on this project where information about the location of data from DOTA2 is described](https://github.com/antonpup/Dota2GSI)
