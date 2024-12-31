@@ -6,7 +6,7 @@
 1. Go to the address: `DOTA2-HUDS-Observer-fyflo-main\overlay` and adjust the resolution to yours in the `package.json` file ("width": `specify the width`, "height": `specify the height`).
 2. If the HUD is on the wrong monitor, select it in the taskbar, and press `Win+Shift+Arrow keys` to move it to the correct monitor.
 
-3. # Examples
+# Examples
 <details><summary>HUD</summary>
 	
 ![Ex1](https://i.imgur.com/NWGLDSB.jpeg)
