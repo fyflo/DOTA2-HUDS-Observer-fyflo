@@ -1,7 +1,7 @@
 var io = io("http://" + ip + ":" + port + "/");
 var avatars = {};
 
-//console.log(io)
+//console.log(io);
 //console.log(ip)
 //console.log(port)
 
@@ -47,6 +47,7 @@ function loadAvatar(steamid, callback) {
 $(document).ready(function () {
   if (io.connected) {
     console.log("main.js Connected to io");
+    //console.log(data);
   }
   let ignoredSteamIDs = []; //Initialize ignoredSteamIDs array to hide players
   var slotted = [];
@@ -58,78 +59,6 @@ $(document).ready(function () {
     getTeamTwo: function () {
       if (!this.info.teams) return false;
       return this.loadTeam(this.info.teams.team_2.team);
-    },
-    getTeamThree: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_3.team);
-    },
-    getTeamFor: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_4.team);
-    },
-    getTeamFive: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_5.team);
-    },
-    getTeamSix: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_6.team);
-    },
-    getTeamSeven: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_7.team);
-    },
-    getTeamEight: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_8.team);
-    },
-    getTeamNine: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_9.team);
-    },
-    getTeamTen: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_10.team);
-    },
-    getTeamEleven: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_11.team);
-    },
-    getTeamTwelve: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_12.team);
-    },
-    getTeamTwenty: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_20.team);
-    },
-    getTeamTwentyOne: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_21.team);
-    },
-    getTeamtwentyTwo: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_22.team);
-    },
-    getTeamTwentyThree: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_23.team);
-    },
-    getTeamTwentyFour: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_24.team);
-    },
-    getTeamTwentyFive: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_25.team);
-    },
-    getTeamTwentySix: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_26.team);
-    },
-    getTeamTwentySeven: function () {
-      if (!this.info.teams) return false;
-      return this.loadTeam(this.info.teams.team_27.team);
     },
     loadTeam: function (id) {
       return this.info.teamList[id] || false;
@@ -143,51 +72,168 @@ $(document).ready(function () {
       return this.info.teams || false;
     },
     getPlayers: function () {
-      //console.log(this.info.player.team2);
-      if (!this.info.player.team3) return false;
+      if (
+        !this.info.player.team2 ||
+        !this.info.player.team3 ||
+        !this.info.player.team2.player0 ||
+        !this.info.player.team2.player1 ||
+        !this.info.player.team2.player2 ||
+        !this.info.player.team2.player3 ||
+        !this.info.player.team2.player4 ||
+        !this.info.player.team3.player5 ||
+        !this.info.player.team3.player6 ||
+        !this.info.player.team3.player7 ||
+        !this.info.player.team3.player8 ||
+        !this.info.player.team3.player9
+      )
+        return false;
+
       let res = [];
-      for (var steamid in this.info.player.team3) {
-        let player = this.info.player.team3[steamid];
-        //if (player.observer_slot == 0) player.observer_slot = 10
-        if (player.observer_slot === undefined) {
-          continue;
+
+      function processPlayer(player, team, slot) {
+        if (player && player.team_slot !== undefined) {
+          // Убедимся что steamid существует и корректен
+          if (!player.steamid && player.accountid) {
+            player.steamid = BigInt(player.accountid);
+            player.steamid = player.steamid.toString();
+          }
+
+          // Добавляем данные о герое из info.hero
+          if (
+            this.info.hero &&
+            this.info.hero[team] &&
+            this.info.hero[team][slot]
+          ) {
+            player.hero = this.info.hero[team][slot];
+          }
+
+          // Назначаем курьеров только для определенных игроков
+          if (this.info.couriers) {
+            switch (slot) {
+              case "player0":
+                player.courier2 = this.info.couriers.courier2; // player0
+                break;
+              case "player1":
+                player.courier3 = this.info.couriers.courier3; // player1
+                break;
+              case "player2":
+                player.courier4 = this.info.couriers.courier4; // player2
+                break;
+              case "player3":
+                player.courier5 = this.info.couriers.courier5; // player3
+                break;
+              case "player4":
+                player.courier6 = this.info.couriers.courier6; // player4
+                break;
+              case "player5":
+                player.courier7 = this.info.couriers.courier7; // player5
+                break;
+              case "player6":
+                player.courier8 = this.info.couriers.courier8; // player6
+                break;
+              case "player7":
+                player.courier9 = this.info.couriers.courier9; // player7
+                break;
+              case "player8":
+                player.courier0 = this.info.couriers.courier0; // player8
+                break;
+              case "player9":
+                player.courier1 = this.info.couriers.courier1; // player9
+                break;
+            }
+          }
+          // ... существующий код ...
+          res.push(player);
         }
-
-        player.steamid = steamid;
-        player.steamid = steamid;
-
-        if (ignoredSteamIDs.includes(steamid)) {
-          //If the steamID is in ignoredSteamIDs, we continue to the next player in the loop
-          continue;
-        }
-
-        res.push(player);
       }
+
+      // Process team2 players
+      processPlayer.call(
+        this,
+        this.info.player.team2.player0,
+        "team2",
+        "player0"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team2.player1,
+        "team2",
+        "player1"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team2.player2,
+        "team2",
+        "player2"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team2.player3,
+        "team2",
+        "player3"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team2.player4,
+        "team2",
+        "player4"
+      );
+
+      // Process team3 players
+      processPlayer.call(
+        this,
+        this.info.player.team3.player5,
+        "team3",
+        "player5"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team3.player6,
+        "team3",
+        "player6"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team3.player7,
+        "team3",
+        "player7"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team3.player8,
+        "team3",
+        "player8"
+      );
+      processPlayer.call(
+        this,
+        this.info.player.team3.player9,
+        "team3",
+        "player9"
+      );
+
       res.sort(function (a, b) {
-        return a.observer_slot - b.observer_slot;
-        //return a.observer_slot - b.observer_slot + 1;
+        return a.team_slot - b.team_slot;
       });
+
       return res;
     },
-    getCT: function () {
+    getDire: function () {
       let all_players = [];
-
       let team_money = 0;
       let equip_value = 0;
-
       let ret = {
         players: [],
-        side: "ct",
+        side: "dire",
       };
 
-      if (!this.info.map || !this.info.map.team_ct) return false;
+      if (!this.info.league || !this.info.league.dire.name) return false;
 
-      ret = $.extend({}, ret, this.info.map.team_ct);
+      ret = $.extend({}, ret, this.info.league.dire); //вытягивает игроков по слотам от 0 до 9
 
-      if (!ret.name) ret.name = "Counter-terrorists";
+      if (!ret.name) ret.name = "dire";
       for (let sid in this.getPlayers()) {
         let player = this.getPlayers()[sid];
-        if (player.team.toLowerCase() == "ct") {
+        /*if (player.team.toLowerCase() == "dire") {
           if (
             player.state &&
             (player.state.equip_value || player.state.money)
@@ -196,30 +242,30 @@ $(document).ready(function () {
             equip_value += player.state.equip_value || 0;
           }
           all_players.push(player);
-        }
+        }*/
       }
       ret.team_money = team_money;
-      ret.equip_value = equip_value;
-      ret.players = all_players;
+      //ret.equip_value = equip_value;
+      ret.players = all_players; //список игроков
       return ret;
     },
-    getT: function () {
+    getRadiant: function () {
       let all_players = [];
       let team_money = 0;
       let equip_value = 0;
       let ret = {
         players: [],
-        side: "t",
+        side: "radiant",
       };
 
-      if (!this.info.map || !this.info.map.team_t) return false;
+      if (!this.info.league || !this.info.league.radiant.name) return false;
 
-      ret = $.extend({}, ret, this.info.map.team_t);
+      ret = $.extend({}, ret, this.info.league.radiant);
 
-      if (!ret.name) ret.name = "Terrorists";
+      if (!ret.name) ret.name = "Radiant";
       for (let sid in this.getPlayers()) {
         let player = this.getPlayers()[sid];
-        if (player.team.toLowerCase() == "t") {
+        /*if (player.team.toLowerCase() == "radiant") {
           if (
             player.state &&
             (player.state.equip_value || player.state.money)
@@ -228,25 +274,60 @@ $(document).ready(function () {
             equip_value += player.state.equip_value || 0;
           }
           all_players.push(player);
-        }
+        }*/
       }
       ret.team_money = team_money;
-      ret.equip_value = equip_value;
+      //ret.equip_value = equip_value;
       ret.players = all_players;
       return ret;
     },
     getObserved: function () {
-      //console.log(this.info.player.team3.player5.steamid);
-      if (!this.info.player || this.info.player.steamid == 1) return false;
-
-      let steamid = this.info.player.steamid;
       let players = this.getPlayers();
+      let observedPlayers = [];
 
-      for (var k in players) {
-        if (players[k].steamid == steamid) return players[k];
+      // Проверяем слоты от 0 до 9 для team2 и team3
+      let teams = ["team2", "team3"];
+      let slots = {
+        team2: ["player0", "player1", "player2", "player3", "player4"],
+        team3: ["player5", "player6", "player7", "player8", "player9"],
+      };
+
+      for (let team of teams) {
+        if (this.info.player[team]) {
+          // Проверяем, существует ли команда
+          for (let slot of slots[team]) {
+            let player = this.info.player[team][slot];
+            if (player && player.steamid) {
+              // Добавляем информацию о игроке из info.players, если имя совпадает
+              for (let key in this.info.players) {
+                if (this.info.players[key].displayed_name === player.name) {
+                  player.sid = this.info.players[key].sid; // Добавляем sid
+                  player.displayed_name = this.info.players[key].displayed_name; // Добавляем displayed_name
+                  break; // Выходим из цикла, если нашли совпадение
+                }
+              }
+
+              observedPlayers.push({
+                name: player.name,
+                kills: player.kills,
+                kill_list: player.kill_list,
+                kill_streak: player.kill_streak,
+                net_worth: player.net_worth,
+                assists: player.assists,
+                deaths: player.deaths,
+                selected_unit: player.hero ? player.hero.selected_unit : false,
+                hero_damage: player.hero_damage,
+                avatar: player.avatar || null, // Добавляем avatar, если он есть
+                steamid: player.steamid || null, // Добавляем steamid, если он есть
+                displayed_name: player.displayed_name || null, // Добавляем displayed_name, если он есть
+                sid: player.sid || null, // Добавляем sid, если он есть
+              });
+            }
+          }
+        }
       }
 
-      return false;
+      return observedPlayers.length > 0 ? observedPlayers : false;
     },
     getPlayer: function (slot) {
       slot = parseInt(slot);
@@ -254,57 +335,70 @@ $(document).ready(function () {
       if (!(slot >= 0 && slot <= 12)) return false;
       return slotted[slot];
     },
-    phase: function () {
-      if (!this.info.phase_countdowns) return false;
-      return this.info.phase_countdowns;
+    abilities: function () {
+      //console.log(this.info.abilities);
+      if (!this.info.abilities) return false;
+      return this.info.abilities;
     },
-    round: function () {
-      if (!this.info.round) return false;
-      return this.info.round;
+    buildings: function () {
+      if (!this.info.buildings) return false;
+      return this.info.buildings;
+    },
+    couriers: function () {
+      if (!this.info.couriers) return false;
+      return this.info.couriers;
+    },
+    draft: function () {
+      if (!this.info.draft) return false;
+      return this.info.draft;
+    },
+    events: function () {
+      if (!this.info.events) return false;
+      return this.info.events;
+    },
+    hero: function () {
+      if (!this.info.hero) return false;
+      return this.info.hero;
+    },
+    items: function () {
+      if (!this.info.items) return false;
+      return this.info.items;
+    },
+    league: function () {
+      if (!this.info.league) return false;
+      return this.info.league;
     },
     map: function () {
       if (!this.info.map) return false;
       return this.info.map;
     },
+    minimap: function () {
+      if (!this.info.minimap) return false;
+      return this.info.minimap;
+    },
+    neutralitems: function () {
+      if (!this.info.neutralitems) return false;
+      return this.info.neutralitems;
+    },
+    player: function () {
+      if (!this.info.player) return false;
+      return this.info.player;
+    },
     previously: function () {
       if (!this.info.previously) return false;
       return this.info.previously;
     },
-    bomb: function () {
-      if (!this.info.bomb) return false;
-      return this.info.bomb;
+    provider: function () {
+      if (!this.info.provider) return false;
+      return this.info.provider;
     },
-    statusbomb: function () {
-      if (last.bomb && data.bomb) {
-        if (last.bomb.state === "planting" && data.bomb.state === "planted") {
-          this.execute("bombPlant", last.bomb.player);
-        } else if (
-          last.bomb.state !== "exploded" &&
-          data.bomb.state === "exploded"
-        ) {
-          this.execute("bombExplode");
-        } else if (
-          last.bomb.state !== "defused" &&
-          data.bomb.state === "defused"
-        ) {
-          this.execute("bombDefuse", last.bomb.player);
-        } else if (
-          last.bomb.state !== "defusing" &&
-          data.bomb.state === "defusing"
-        ) {
-          this.execute("defuseStart", data.bomb.player);
-        } else if (
-          last.bomb.state === "defusing" &&
-          data.bomb.state !== "defusing"
-        ) {
-          this.execute("defuseStop", last.bomb.player);
-        } else if (
-          last.bomb.state !== "planting" &&
-          data.bomb.state === "planting"
-        ) {
-          this.execute("bombPlantStart", last.bomb.player);
-        }
-      }
+    roshan: function () {
+      if (!this.info.roshan) return false;
+      return this.info.roshan;
+    },
+    wearables: function () {
+      if (!this.info.wearables) return false;
+      return this.info.wearables;
     },
   };
   var integ = {
@@ -314,68 +408,58 @@ $(document).ready(function () {
   let match = null;
 
   function create(data, players_data, teams_data) {
-    //console.log(data);
-    //console.log(players_data); //информация об игроке из базы
-    //console.log(teams_data);
     data.teamList = teams_data;
     data.players = players_data;
     integ.info = data;
     integ = $.extend({}, meth, integ);
+
     if (integ.getPlayers() !== false) {
       for (var k in integ.getPlayers()) {
-        let slot = integ.getPlayers()[k].observer_slot;
-        let steamid = integ.getPlayers()[k].steamid;
+        let player = integ.getPlayers()[k];
+        let slot = player.observer_slot;
+        let steamid = player.steamid;
 
-        slotted[slot] = integ.getPlayers()[k];
+        slotted[slot] = player;
+        // Найдем игрока в players_data по steamid или имени
+        let playerData = null;
+        for (let pid in players_data) {
+          if (
+            (players_data[pid].sid && players_data[pid].sid === steamid) ||
+            (players_data[pid].steamid &&
+              players_data[pid].steamid === steamid) || // Проверка по steamid
+            players_data[pid].name === player.name || // Поиск по имени
+            players_data[pid].displayed_name === player.name // Поиск по displayed_name
+          ) {
+            playerData = players_data[pid];
+            break;
+          }
+        }
 
         let name = slotted[slot].name;
 
-        if (!slotted[slot].steamid) {
-          slotted[slot].steamid = k;
-        }
+        if (playerData) {
+          slotted[slot].name = playerData.displayed_name || name;
+          slotted[slot].real_name = playerData.real_name || name;
+          slotted[slot].country_code = playerData.country_code;
+          if (playerData.avatar) {
+            slotted[slot].avatar = playerData.avatar;
+            /*console.log(
+              "Аватар найден для игрока:",
+              steamid,
+              "Аватар:",
+              playerData.avatar
+            );*/
+          }
+          if (playerData.team) {
+            slotted[slot].teamData = integ.loadTeam(playerData.team);
+          }
+        } /*else {
+          console.log("Данные не найдены для игрока:", steamid);
+        }*/
 
-        slotted[slot].name = players_data[steamid]
-          ? players_data[steamid].displayed_name || name
-          : name;
-        slotted[slot].real_name = players_data[steamid]
-          ? players_data[steamid].real_name || name
-          : name;
-        if (players_data[steamid] && players_data[steamid].country_code) {
-          slotted[slot].country_code = players_data[steamid].country_code;
-        }
-        if (players_data[steamid] && players_data[steamid].avatar) {
-          slotted[slot].avatar = players_data[steamid].avatar;
-        }
-        if (players_data[steamid] && players_data[steamid].team) {
-          slotted[slot].teamData = integ.loadTeam(players_data[steamid].team);
-        }
+        // Настройка методов для игрока
         integ.getPlayers()[k].getState = function () {
           return this.state;
-        };
-        integ.getPlayers()[k].getWeapons = function () {
-          return this.weapons;
-        };
-        integ.getPlayers()[k].getCurrentWeapon = function () {
-          var temp_weapons = this.getWeapons();
-          if (temp_weapons !== false) {
-            for (var k in temp_weapons) {
-              if (temp_weapons[k].state == "active") {
-                return temp_weapons[k];
-              }
-            }
-          }
-        };
-        integ.getPlayers()[k].getGrenades = function () {
-          var grenades = [];
-          var temp_weapons = this.getWeapons();
-          if (temp_weapons !== false) {
-            for (var k in temp_weapons) {
-              if (temp_weapons[k].type == "Grenade") {
-                grenades.push(temp_weapons[k]);
-              }
-            }
-            return grenades;
-          }
         };
         integ.getPlayers()[k].getStats = function () {
           var temp_stats = $.extend({}, this.match_stats, this.state);
