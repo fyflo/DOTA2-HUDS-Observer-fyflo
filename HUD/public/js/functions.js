@@ -167,6 +167,11 @@ function listPlayers(defaultPlayer) {
     $playerList = $("#players");
     $playerList.html("<option value='default'>New player</option>");
 
+    // Сортируем игроков по displayed_name
+    players.sort(function (a, b) {
+      return a.displayed_name.localeCompare(b.displayed_name);
+    });
+
     players.forEach(function (player, id) {
       let $option = $(
         "<option value='" +

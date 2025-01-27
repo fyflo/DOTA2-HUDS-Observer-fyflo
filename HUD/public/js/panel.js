@@ -7,7 +7,7 @@ function loadMatch(data) {
     $teamList.html(
       "<option value=null>NONE</option><option value='auto' selected>Try to match team automatically</option>"
     );
-    teams.sort();
+    teams.sort((a, b) => a.team_name.localeCompare(b.team_name)); // Сортировка по имени команды
     teams.forEach(function (team, id) {
       let $option = $(
         "<option value='" +
@@ -123,7 +123,7 @@ function loadMatch(data) {
 $(document).ready(() => {
   if (io.connected) {
     console.log("Panel.js Connected to io");
-      }
+  }
 
   function toggleMapCards(botype) {
     if (botype === "bo1") {
@@ -4730,7 +4730,6 @@ $(document).ready(() => {
     };
     io.emit("update_match", match);
     console.log("Panel.js Connected to io");
-
   });
   $("#ref").click(() => {
     io.emit("refresh", true);
