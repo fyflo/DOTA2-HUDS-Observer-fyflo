@@ -1,5 +1,22 @@
 # DOTA2-HUDS-Observer-fyflo
 
+# Update bd
+In version 2.0.9, the database has been updated. Now the lowbd database is used instead of the nebd database, since it has stopped updating. And we need to switch to the new node.js Now you can update node.js to the latest version from the official website.
+
+In order to transfer the player, team and HUD database, you need to download this assembly and unpack the folder without the databases folder.
+
+We replace everything else when unpacking.
+
+1. Go to the HUD folder and call cmd in the address bar.
+2. Enter the commands one by one:
+```commands
+   	npm install lowdb@1.0.0 shortid nedb path
+	node migrations/migrate-teams.js
+	node migrations/migrate-huds.js
+	node migrations/nedb-to-lowdb.js
+```
+3. Now run it as a standard program via DOTA2_HUD_fyflo.exe
+
 [MY DISCORD](https://discord.gg/7BtSdAmTf8) We discuss, propose and try to implement together.
 
 ## NEW OVERLAY
