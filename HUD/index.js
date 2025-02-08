@@ -1,20 +1,19 @@
 const http = require("http"),
   apps = require("express"),
   app = apps(),
-  request = require("request"),
+  request = require("retry-request"),
   express = require("http").Server(app),
   io = require("socket.io")(express),
-  fs = require("fs"),
+  fs = require("fs-extra"),
   //address = "localhost",
   address = require("ip").address(),
-  player = require("./mod/players.js"),
+  players = require("./mod/players.js"),
   teams = require("./mod/teams.js"),
   huds = require("./mod/huds.js");
 
 var recent_update;
 var match = null;
 var multer = require("multer");
-
 
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -100,17 +99,17 @@ app.delete("/api/teams", teams.deleteTeam);
 
 app.delete("/api/teams_logo", teams.deleteLogo);
 
-app.get("/players", player.render);
+app.get("/players", players.render);
 
-app.get("/api/players", player.getPlayers);
+app.get("/api/players", players.getPlayers);
 
-app.post("/api/players", upload.single("avatar"), player.addPlayer);
+app.post("/api/players", upload.single("avatar"), players.addPlayer);
 
-app.patch("/api/players", upload.single("avatar"), player.updatePlayer);
+app.patch("/api/players", upload.single("avatar"), players.updatePlayer);
 
-app.delete("/api/players", player.deletePlayer);
+app.delete("/api/players", players.deletePlayer);
 
-app.delete("/api/players_avatar", player.deleteAvatar);
+app.delete("/api/players_avatar", players.deleteAvatar);
 
 app.get("/av/:sid([0-9]+)", (req, res) => {
   let steam_id = req.params.sid;
@@ -139,9 +138,9 @@ app.get("/av/:sid([0-9]+)", (req, res) => {
       let body = Buffer.concat(bodyChunks);
       try {
         data = JSON.parse(body).response;
-        if (data && data.player) {
+        if (data && data.players) {
           download(
-            data.player[0].avatarfull,
+            data.players[0].avatarfull,
             config.AvatarDirectory + filename,
             () => {
               let file = fs.readFileSync(filepath);
