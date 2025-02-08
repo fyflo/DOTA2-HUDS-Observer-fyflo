@@ -14,44 +14,36 @@ const diant_right = "rgba(227, 78, 49, 1.0)";
 var teams = {
   left: {},
   right: {},
-  team_3: {},
-  team_4: {},
-  team_5: {},
-  team_6: {},
-  team_7: {},
-  team_8: {},
-  team_9: {},
-  team_10: {},
-  team_11: {},
-  team_12: {},
 };
-
 
 function updatePage(data) {
   var matchup = data.getMatchType();
   var match = data.getMatch();
   var team_one = data.getTeamOne();
   var team_two = data.getTeamTwo();
-  var team_three = data.getTeamThree();
-  var team_for = data.getTeamFor();
-  var team_five = data.getTeamFive();
-  var team_six = data.getTeamSix();
-  var team_seven = data.getTeamSeven();
-  var team_eight = data.getTeamEight();
-  var team_nine = data.getTeamNine();
-  var team_ten = data.getTeamTen();
-  var team_eleven = data.getTeamEleven();
-  var team_twelve = data.getTeamTwelve();
-  var team_ct = data.getCT();
-  var team_t = data.getT();
-  var phase = data.phase();
+  var team_Dire = data.getDire();
+  var team_Radiant = data.getRadiant();
   var observed = data.getObserved();
   var players = data.getPlayers();
-  var round = data.round();
-  var map = data.map();
   live_map = map;
+  var abilities = data.abilities();
+  var buildings = data.buildings();
+  var couriers = data.couriers();
+  var draft = data.draft();
+  var events = data.events();
+  var hero = data.hero();
+  var items = data.items();
+  var league = data.league();
+  var map = data.map();
+  var minimap = data.minimap();
+  var neutralitems = data.neutralitems();
+  var player = data.player();
   var previously = data.previously();
-  var bomb = data.bomb();
+  var provider = data.provider();
+  var roshan = data.roshan();
+  var wearables = data.wearables();
+  //console.log(observed);
+  //console.log(team_Radiant);
 
   var test_player = data.getPlayer(1);
 
@@ -133,30 +125,35 @@ function updatePage(data) {
   //console.log(teams.left.hero);
   //console.log(teams.right.players);
 
+  const GAME_STATE = {
+    HERO_SELECTION: "DOTA_GAMERULES_STATE_HERO_SELECTION",
+    STRATEGY_TIME: "DOTA_GAMERULES_STATE_STRATEGY_TIME",
+    TEAM_SHOWCASE: "DOTA_GAMERULES_STATE_TEAM_SHOWCASE",
+  };
 
-const GAME_STATE = {
-  HERO_SELECTION: "DOTA_GAMERULES_STATE_HERO_SELECTION",
-  STRATEGY_TIME: "DOTA_GAMERULES_STATE_STRATEGY_TIME",
-  TEAM_SHOWCASE: "DOTA_GAMERULES_STATE_TEAM_SHOWCASE"
-};
+  const ELEMENTS_TO_TOGGLE = [
+    "#observed",
+    "#players_left",
+    "#players_right",
+    "#top_panel",
+  ];
 
-const ELEMENTS_TO_TOGGLE = ["#observed", "#players_left", "#players_right", "#top_panel"];
+  function toggleElementsVisibility(data) {
+    const gameState = data.info.map.game_state;
+    const opacity =
+      gameState === GAME_STATE.HERO_SELECTION ||
+      gameState === GAME_STATE.STRATEGY_TIME ||
+      gameState === GAME_STATE.TEAM_SHOWCASE
+        ? 0
+        : 1;
 
-function toggleElementsVisibility(data) {
-  const gameState = data.info.map.game_state;
-  const opacity = (gameState === GAME_STATE.HERO_SELECTION || 
-                  gameState === GAME_STATE.STRATEGY_TIME ||
-                  gameState === GAME_STATE.TEAM_SHOWCASE) ? 0 : 1;
-  
-  ELEMENTS_TO_TOGGLE.forEach(selector => {
-    $(selector).css("opacity", opacity);
-  });
-}
+    ELEMENTS_TO_TOGGLE.forEach((selector) => {
+      $(selector).css("opacity", opacity);
+    });
+  }
 
-// Заменить существующий if-else блок на:
-toggleElementsVisibility(data);
-
-
+  // Заменить существующий if-else блок на:
+  toggleElementsVisibility(data);
 
   var name1 = teams.left.players.player0.name;
   var name2 = teams.left.players.player1.name;
@@ -178,16 +175,16 @@ toggleElementsVisibility(data);
   var info8 = teams.right.players.player7;
   var info9 = teams.right.players.player8;
   var info10 = teams.right.players.player9;
-  var hero1 = teams.left.hero.player0.name
-  var hero2 = teams.left.hero.player1.name
-  var hero3 = teams.left.hero.player2.name
-  var hero4 = teams.left.hero.player3.name
-  var hero5 = teams.left.hero.player4.name
-  var hero6 = teams.right.hero.player5.name
-  var hero7 = teams.right.hero.player6.name
-  var hero8 = teams.right.hero.player7.name
-  var hero9 = teams.right.hero.player8.name
-  var hero10 = teams.right.hero.player9.name
+  var hero1 = teams.left.hero.player0.name;
+  var hero2 = teams.left.hero.player1.name;
+  var hero3 = teams.left.hero.player2.name;
+  var hero4 = teams.left.hero.player3.name;
+  var hero5 = teams.left.hero.player4.name;
+  var hero6 = teams.right.hero.player5.name;
+  var hero7 = teams.right.hero.player6.name;
+  var hero8 = teams.right.hero.player7.name;
+  var hero9 = teams.right.hero.player8.name;
+  var hero10 = teams.right.hero.player9.name;
   var steam1 = teams.left.players.player0.steamid;
   var steam2 = teams.left.players.player1.steamid;
   var steam3 = teams.left.players.player2.steamid;
@@ -199,9 +196,8 @@ toggleElementsVisibility(data);
   var steam9 = teams.right.players.player8.steamid;
   var steam10 = teams.right.players.player9.steamid;
   var league = data.info.league;
-  var abilities = data.info.abilities;  
+  var abilities = data.info.abilities;
   //console.log(data.info.players.asVCmFbyuA8IHHSP.displayed_name);
-
 
   //teams.left.players.player0
   // net_worth - общая ценность
@@ -322,46 +318,46 @@ toggleElementsVisibility(data);
 
   //console.log(info1.gold);
 
-// ... existing code ...
+  // ... existing code ...
 
-// Обновление статистики игроков (золото, убийства, помощь, смерти)
-for (let i = 1; i <= 5; i++) {
-  $(`#players_left #player_section #player${i} #player_current_money_text`).text(
-    eval(`info${i}`).gold
-  );
-  $(`#players_right #player_section #player${i} #player_current_money_text`).text(
-    eval(`info${i + 5}`).gold
-  );
-}
+  // Обновление статистики игроков (золото, убийства, помощь, смерти)
+  for (let i = 1; i <= 5; i++) {
+    $(
+      `#players_left #player_section #player${i} #player_current_money_text`
+    ).text(eval(`info${i}`).gold);
+    $(
+      `#players_right #player_section #player${i} #player_current_money_text`
+    ).text(eval(`info${i + 5}`).gold);
+  }
 
-// ... существующий код ...
+  // ... существующий код ...
   //console.log(info1.kills);
   // ... существующий код ...
 
-// Обновление статистики (убийства/смерти/помощь) для всех игроков
-const stats = ['kills', 'deaths', 'assists'];
+  // Обновление статистики (убийства/смерти/помощь) для всех игроков
+  const stats = ["kills", "deaths", "assists"];
 
-stats.forEach(stat => {
-  for (let i = 1; i <= 5; i++) {
-    $(`#players_left #player_section #player${i} #player_${stat}_text`).text(
-      eval(`info${i}`)[stat]
-    );
-    $(`#players_right #player_section #player${i} #player_${stat}_text`).text(
-      eval(`info${i + 5}`)[stat]
-    );
-  }
-});
-
-// ... existing code ...
-
-$(document).ready(function() {
-  // Глобальный перехватчик ошибок для изображений
-  $('img').on('error', function(e) {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
+  stats.forEach((stat) => {
+    for (let i = 1; i <= 5; i++) {
+      $(`#players_left #player_section #player${i} #player_${stat}_text`).text(
+        eval(`info${i}`)[stat]
+      );
+      $(`#players_right #player_section #player${i} #player_${stat}_text`).text(
+        eval(`info${i + 5}`)[stat]
+      );
+    }
   });
-});
+
+  // ... existing code ...
+
+  $(document).ready(function () {
+    // Глобальный перехватчик ошибок для изображений
+    $("img").on("error", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      return false;
+    });
+  });
 
   updateTopPanel(league, teams);
   updateStateLive(data);
@@ -454,7 +450,7 @@ function updateStateLive(data) {
 
 function updateObserver(data, players) {
   // ... существующий код ...
-/*
+  /*
   // Создаем массивы для данных игроков
   const playerData = {
     names: [],
@@ -485,7 +481,7 @@ function updateObserver(data, players) {
     const avatarUrls = [
       `/storage/avatar/${playerName}.png`,
       /*`/storage/avatar/${steamId}.png`,*/
-      /*DEFAULT_AVATAR
+  /*DEFAULT_AVATAR
     ];
 
     function tryNextAvatar(index) {
@@ -528,14 +524,10 @@ function updateObserver(data, players) {
     $("#obs_alias_text").text("");
   }*/
 
-
-
-//тест
-//console.log(data.info.player.team2.player0.name);
-//console.log(data.info.player.team3.player5.name);
-//console.log(data.info.players.asVCmFbyuA8IHHSP.displayed_name);
-
-
+  //тест
+  //console.log(data.info.player.team2.player0.name);
+  //console.log(data.info.player.team3.player5.name);
+  //console.log(data.info.players.asVCmFbyuA8IHHSP.displayed_name);
 
   // Функция для поиска игрока и его аватара в базе players
   function findPlayerAvatar(searchName) {
@@ -552,11 +544,9 @@ function updateObserver(data, players) {
     if (data.info.hero.team2[`player${i}`].selected_unit) {
       const playerName = data.info.player.team2[`player${i}`].name;
       const avatar = findPlayerAvatar(playerName);
-      
+
       if (avatar) {
-        $("#obs_img")
-          .attr("src", `/storage/${avatar}`)
-          .show();
+        $("#obs_img").attr("src", `/storage/${avatar}`).show();
         $("#obs_img2").hide();
         $("#obs_alias_text").text(playerName);
       } else {
@@ -575,11 +565,9 @@ function updateObserver(data, players) {
     if (data.info.hero.team3[`player${i}`].selected_unit) {
       const playerName = data.info.player.team3[`player${i}`].name;
       const avatar = findPlayerAvatar(playerName);
-      
+
       if (avatar) {
-        $("#obs_img")
-          .attr("src", `/storage/${avatar}`)
-          .show();
+        $("#obs_img").attr("src", `/storage/${avatar}`).show();
         $("#obs_img2").hide();
         $("#obs_alias_text").text(playerName);
       } else {
@@ -597,37 +585,34 @@ function updateObserver(data, players) {
   $("#observed").css("opacity", "0");
 }
 
-
-
-
 function abilitiesUlta(abilities) {
   // Проходим по всем игрокам (0-9)
   for (let player = 0; player < 10; player++) {
     // Определяем команду и номер игрока
-    const team = player < 5 ? 'team2' : 'team3';
+    const team = player < 5 ? "team2" : "team3";
     const playerNum = player < 5 ? player : player - 5;
-    
+
     // HTML элементы нумеруются с 1 до 10, а игроки с 0 до 9
     const uiIndex = player + 1;
-    
+
     // Проверяем способности от 0 до 8 для каждого игрока
     for (let i = 0; i < 9; i++) {
       const ability = abilities[team][`player${player}`][`ability${i}`];
-      
+
       // Если находим ульту
       if (ability && ability.ultimate === true) {
         //console.log(`Найдена ульта игрока ${player}: ${ability.name}`);
-        
+
         // Отображаем название ульты для конкретного игрока
         $(`#ultimate_name_${uiIndex}`).text(ability.name);
-        
+
         // Проверяем кулдаун
         if (ability.cooldown !== 0) {
           // Если кулдаун не 0, показываем картинку и значение кулдауна
           $(`#ultimate_image_${uiIndex}`)
             .attr({
-              "src": `/storage/dota2/abilities/${ability.name}.webp`,
-              "alt": ability.name
+              src: `/storage/dota2/abilities/${ability.name}.webp`,
+              alt: ability.name,
             })
             .show();
           $(`#ultimate_cooldown_${uiIndex}`)
@@ -638,10 +623,9 @@ function abilitiesUlta(abilities) {
           $(`#ultimate_image_${uiIndex}`).hide();
           $(`#ultimate_cooldown_${uiIndex}`).hide();
         }
-        
+
         break; // Переходим к следующему игроку после нахождения ульты
       }
     }
   }
-
 }
