@@ -1,7 +1,7 @@
 # DOTA2-HUDS-Observer-fyflo
 
 # Update bd
-In version 2.0.9, the database has been updated. Now the lowbd database is used instead of the nebd database, since it has stopped updating. And we need to switch to the new node.js Now you can update node.js to the latest version from the official website.
+In version 1.0.7, the database has been updated. Now the lowbd database is used instead of the nebd database, since it has stopped updating. And we need to switch to the new node.js Now you can update node.js to the latest version from the official website.
 
 In order to transfer the player, team and HUD database, you need to download this assembly and unpack the folder without the databases folder.
 
@@ -51,8 +51,9 @@ Basically, DOTA2 is streaming data to local app-server, that transforms data and
 - Ensure everything in the `config.json` file is filled out
 
   ## How to make it run?
-
-- Install NodeJS v20.18.0 (nodejs.org)
+- Install NodeJS v20.18.0 (nodejs.org) if you are using a release before 1.0.7
+- Install NodeJS v22.13.1 or higher (nodejs.org) if you are using release 1.0.7 or higher
+  
 ##
 - Start DOTA2_HUD_fyflo.exe
 ##
